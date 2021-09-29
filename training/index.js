@@ -16,41 +16,56 @@ let pose;
 let skeleton;
 
 let brain;
-let poseLabel = "";
 
 let state = 'waiting';
 let targetLabel;
 
-function keyPressed() {
+const init = () => {
+  document.querySelector(`.label`).addEventListener('click', handleClickLabel)
+}
+
+const delay = (time) => {
+  return new Promise((resolve, reject) => {
+   setTimeout(resolve, time)
+  })
+
+}
+
+const handleClickLabel = async () =>{
+  
+}
+
+async function keyPressed() {
   if (key == 't') {
     brain.normalizeData();
-    brain.train({epochs: 50}, finished); 
+    brain.train({epochs: 75}, finished); 
   } else if (key == 's') {
     brain.saveData();
   } else {
     targetLabel = key;
     console.log(targetLabel);
-    setTimeout(function() {
-      console.log('collecting');
-      state = 'collecting';
-      setTimeout(function() {
-        console.log('not collecting');
-        state = 'waiting';
-      }, 2000);
-    }, 1000);
+
+    await delay(2000)
+    console.log('collecting');
+    state = 'collecting';
+
+    await delay(5000)
+    console.log('not collecting');
+    state = 'waiting';
   }
 }
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(750, 480);
   video = createCapture(VIDEO);
   video.hide();
   poseNet = ml5.poseNet(video, modelLoaded);
   poseNet.on('pose', gotPoses);
 
   let options = {
-    inputs: 34,
-    outputs: 4,
+    inputs: 50,
+    outputs: 8,
+    // goede postuur, achterover geleund, water pakken, te dicht bij scherm, rechtstaan, gsm, slaap voor, slaap achter
     task: 'classification',
     debug: true
   }
@@ -125,5 +140,6 @@ function draw() {
   noStroke();
   textSize(512);
   textAlign(CENTER, CENTER);
-  text(poseLabel, width / 2, height / 2);
 }
+
+init()
