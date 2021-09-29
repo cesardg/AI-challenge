@@ -9,12 +9,47 @@ let poseNet;
 let pose;
 let skeleton;
 
+let neuralNetwork;
+
+let state = "waiting"
+let targetLabel;
+
+function keyPressed() {
+    if (key == "s"){
+        neuralNetwork.saveData()
+    }
+    targetLabel = key;
+    console.log(targetLabel);
+    setTimeout(function(){
+        console.log('collecting');
+        state = 'collecting';
+            setTimeout(function(){
+            console.log('not collecting');
+            state = 'waiting';
+        }, 10000)
+    }, 10000)
+}
+
 function setup() {
-  createCanvas(640, 480);
-  video = createCapture(VIDEO);
-  video.hide();
-  poseNet = ml5.poseNet(video, modelLoaded);
-  poseNet.on('pose', gotPoses);
+    createCanvas(640, 480);
+    video = createCapture(VIDEO);
+    video.hide();
+    poseNet = ml5.poseNet(video, modelLoaded);
+    poseNet.on('pose', gotPoses);
+
+    let options = {
+        inputs: 34,
+        outputs: 4,
+        task: 'classification',
+        debug: true
+
+    }
+    neuralNetwork = ml5.neuralNetwork(options);
+    brain.loadData('superman.json', dataReady)
+}
+
+function dataReady(){
+
 }
 
 function gotPoses(poses) {
@@ -22,6 +57,20 @@ function gotPoses(poses) {
   if (poses.length > 0) {
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
+
+    let inputs = []
+    if (state == 'collecting'){
+    for (let i=0; i < pose.keypoints.length; i++){
+        let x = pose.keypoints[i].position.x;
+        let y = pose.keypoints[i].position.y;
+        inputs.push(x)
+        inputs.push(y)
+    }
+    let target = [targetLabel];
+    neuralNetwork.addData(inputs, target)
+    }
+
+
   }
 }
 
@@ -30,7 +79,10 @@ function modelLoaded() {
 }
 
 function draw() {
-  image(video, 0, 0);
+    translate(video.width, 0)
+    scale(-1, 1);
+    image(video, 0, 0, video.width, video.height);
+ 
 
   if (pose) {
     let eyeR = pose.rightEye;
