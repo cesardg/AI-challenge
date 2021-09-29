@@ -20,8 +20,12 @@ let brain;
 let state = 'waiting';
 let targetLabel;
 
+const $status = document.querySelector('.status');
+
 const init = () => {
   document.querySelector(`.label`).addEventListener('click', handleClickLabel)
+  document.querySelector(`.download1`).addEventListener('click', handleClickDownload1)
+  document.querySelector(`.download2`).addEventListener('click', handleClickDownload2)
 }
 
 const delay = (time) => {
@@ -31,10 +35,31 @@ const delay = (time) => {
 
 }
 
-const handleClickLabel = async () =>{
-  
+const handleClickDownload1 = () => {
+    brain.saveData();
 }
 
+
+const handleClickDownload2 = () => {
+    brain.normalizeData();
+    brain.train({epochs: 75}, finished); 
+}
+
+const handleClickLabel = async () =>{
+    targetLabel = document.querySelector('.label-input').value 
+    console.log(targetLabel);
+
+    await delay(2000)
+    console.log('collecting');
+    $status.textContent = 'collecting'
+    state = 'collecting';
+
+    await delay(5000)
+    console.log('not collecting');
+    $status.textContent = 'not collecting'
+    state = 'waiting';
+}
+/*
 async function keyPressed() {
   if (key == 't') {
     brain.normalizeData();
@@ -54,6 +79,7 @@ async function keyPressed() {
     state = 'waiting';
   }
 }
+*/
 
 function setup() {
   createCanvas(750, 480);
@@ -82,6 +108,7 @@ function dataReady() {
 
 function finished() {
   console.log('model trained');
+  $status.textContent = 'model trained'
   brain.save();
 }
 
@@ -109,6 +136,7 @@ function gotPoses(poses) {
 
 function modelLoaded() {
   console.log('poseNet ready');
+  $status.textContent = 'poseNet ready'
 }
 
 function draw() {
