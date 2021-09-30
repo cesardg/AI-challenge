@@ -16,10 +16,9 @@ let pose;
 let skeleton;
 
 let brain;
-let poseLabel = "Y";
 
 function setup() {
-  createCanvas(750, 480);
+  createCanvas(1000, 700);
   video = createCapture(VIDEO);
   video.hide();
   poseNet = ml5.poseNet(video, modelLoaded);
@@ -64,7 +63,8 @@ function gotResult(error, results) {
   
   if (results[0].confidence > 0.75) {
     console.log(results[0])
-    poseLabel = results[0].label.toUpperCase();
+    document.querySelector(`.posture`).textContent = results[0].label
+    document.querySelector(`.confidence`).textContent = results[0].confidence
   }
   //console.log(results[0].confidence);
   classifyPose();
@@ -110,7 +110,4 @@ function draw() {
 
   fill(255, 0, 255);
   noStroke();
-  textSize(512);
-  textAlign(CENTER, CENTER);
-  text(poseLabel, width / 2, height / 2);
 }

@@ -1,21 +1,16 @@
+// based on:
 // ml5.js: Pose Classification
 // The Coding Train / Daniel Shiffman
 // https://thecodingtrain.com/learning/ml5/7.2-pose-classification.html
 // https://youtu.be/FYgYyq-xqAw
 
-// All code: https://editor.p5js.org/codingtrain/sketches/JoZl-QRPK
-
-// Separated into three sketches
-// 1: Data Collection: https://editor.p5js.org/codingtrain/sketches/kTM0Gm-1q
-// 2: Model Training: https://editor.p5js.org/codingtrain/sketches/-Ywq20rM9
-// 3: Model Deployment: https://editor.p5js.org/codingtrain/sketches/c5sDNr8eM
 
 let video;
 let poseNet;
 let pose;
 let skeleton;
 
-let brain;
+let neuralNetwork;
 
 let state = 'waiting';
 let targetLabel;
@@ -36,13 +31,13 @@ const delay = (time) => {
 }
 
 const handleClickDownload1 = () => {
-    brain.saveData();
+    neuralNetwork.saveData();
 }
 
 
 const handleClickDownload2 = () => {
-    brain.normalizeData();
-    brain.train({epochs: 75}, finished); 
+    neuralNetwork.normalizeData();
+    neuralNetwork.train({epochs: 75}, finished); 
 }
 
 const handleClickLabel = async () =>{
@@ -62,10 +57,10 @@ const handleClickLabel = async () =>{
 /*
 async function keyPressed() {
   if (key == 't') {
-    brain.normalizeData();
-    brain.train({epochs: 75}, finished); 
+    neuralNetwork.normalizeData();
+    neuralNetwork.train({epochs: 75}, finished); 
   } else if (key == 's') {
-    brain.saveData();
+    neuralNetwork.saveData();
   } else {
     targetLabel = key;
     console.log(targetLabel);
@@ -82,7 +77,7 @@ async function keyPressed() {
 */
 
 function setup() {
-  createCanvas(750, 480);
+  createCanvas(1000, 700);
   video = createCapture(VIDEO);
   video.hide();
   poseNet = ml5.poseNet(video, modelLoaded);
@@ -95,21 +90,21 @@ function setup() {
     task: 'classification',
     debug: true
   }
-  brain = ml5.neuralNetwork(options);
+  neuralNetwork = ml5.neuralNetwork(options);
 }
 
 
 function dataReady() {
-  brain.normalizeData();
-  brain.train({
-    epochs: 50
+  neuralNetwork.normalizeData();
+  neuralNetwork.train({
+    epochs: 75
   }, finished);
 }
 
 function finished() {
   console.log('model trained');
   $status.textContent = 'model trained'
-  brain.save();
+  neuralNetwork.save();
 }
 
 
@@ -128,7 +123,7 @@ function gotPoses(poses) {
         inputs.push(y);
       }
       let target = [targetLabel];
-      brain.addData(inputs, target);
+      neuralNetwork.addData(inputs, target);
     }
   }
 }
@@ -166,8 +161,6 @@ function draw() {
 
   fill(255, 0, 255);
   noStroke();
-  textSize(512);
-  textAlign(CENTER, CENTER);
 }
 
 init()
