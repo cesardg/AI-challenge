@@ -199,7 +199,7 @@ const checkTimers = () => {
     }
 
        if (standTimer > 120){
-          $standTime.innerHTML = `<a href="http://127.0.0.1:5500/detecting/detect.html">You sit too long, time to play a game</a>`
+          $standTime.innerHTML = `<a href="playing/play.html">You sit too long, time to play a game</a>`
     }
 }
  

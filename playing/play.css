@@ -4,7 +4,8 @@ html, body {
 }
 canvas {
   display: block;
-  transform: scale(.8) translate(50%, -50rem);
+  transform: translate(0, -50rem);
+  margin: auto;
 }
 
 .container{
@@ -43,4 +44,21 @@ canvas {
 
 .subtitle{
   text-align: center;
+}
+
+.piano{
+  width: 36rem;
+  height: 10rem;
+  border: .1rem solid black;
+  margin-top: 31rem;
+  display: flex;
+}
+
+.tile{
+  background-color: white;
+}
+
+.piano div{
+  border: .1rem solid black;
+  width: 2.25rem;
 }
