@@ -62,3 +62,8 @@ canvas {
   border: .1rem solid black;
   width: 2.25rem;
 }
+
+.triangle{
+  transform: translate(17rem, -30rem);
+  z-index: 2;
+}

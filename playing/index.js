@@ -3,10 +3,6 @@ let poseNet;
 let pose;
 let skeleton;
 
-
-
-
-
 const audio1 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/040.wav")
 const audio2 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/041.wav")
 const audio3 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/042.wav")
@@ -23,6 +19,8 @@ const audio13 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/05
 const audio14 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/054.wav")
 const audio15 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/055.wav")
 const audio16 = new Audio("http://carolinegabriel.com/demo/js-keyboard/sounds/056.wav")
+
+const traingle = new Audio("../assets/traingle.mp3")
 
 function setup() {
   createCanvas(640, 480);
@@ -52,6 +50,7 @@ function draw() {
 
 
   if (pose) {
+    console.log(pose.rightWrist)
     let left = pose.leftAnkle;
     let right = pose.rightAnkle;
     if (left.confidence> 0.7 || right.confidence > 0.7 ){
@@ -60,6 +59,14 @@ function draw() {
       console.log(pose)
    
       playMusic(left.x, right.x, left.y, right.y)
+    }
+
+    if (pose.rightWrist.confidence> 0.7){
+        ellipse(pose.rightWrist.x, (pose.rightWrist.y - 80), 10, 10);
+        line(pose.rightWrist.x, pose.rightWrist.y, pose.rightWrist.x, (pose.rightWrist.y - 80));
+        if (pose.rightWrist.x < 95 && pose.rightWrist.y < 350  && pose.rightWrist.y > 250){
+          traingle.play();
+        }
     }
   }
 }
