@@ -4,4 +4,9 @@ html, body {
 }
 canvas {
   display: block;
+  padding-left: 2rem;
+}
+
+.container{
+  padding: 2rem;
 }

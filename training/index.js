@@ -1,4 +1,4 @@
-// based on:
+// training code based on:
 // ml5.js: Pose Classification
 // The Coding Train / Daniel Shiffman
 // https://thecodingtrain.com/learning/ml5/7.2-pose-classification.html
@@ -18,9 +18,9 @@ let targetLabel;
 const $status = document.querySelector('.status');
 
 const init = () => {
-  document.querySelector(`.label`).addEventListener('click', handleClickLabel)
-  document.querySelector(`.download1`).addEventListener('click', handleClickDownload1)
-  document.querySelector(`.download2`).addEventListener('click', handleClickDownload2)
+  document.querySelector(`.label`).addEventListener('click', handleClickLabel);
+  document.querySelector(`.download1`).addEventListener('click', handleClickDownload1);
+  document.querySelector(`.download2`).addEventListener('click', handleClickDownload2);
 }
 
 const delay = (time) => {
@@ -44,37 +44,17 @@ const handleClickLabel = async () =>{
     targetLabel = document.querySelector('.label-input').value 
     console.log(targetLabel);
 
-    await delay(2000)
+    await delay(3000)
     console.log('collecting');
     $status.textContent = 'collecting'
     state = 'collecting';
 
-    await delay(5000)
+    await delay(8000)
     console.log('not collecting');
     $status.textContent = 'not collecting'
     state = 'waiting';
 }
-/*
-async function keyPressed() {
-  if (key == 't') {
-    neuralNetwork.normalizeData();
-    neuralNetwork.train({epochs: 75}, finished); 
-  } else if (key == 's') {
-    neuralNetwork.saveData();
-  } else {
-    targetLabel = key;
-    console.log(targetLabel);
 
-    await delay(2000)
-    console.log('collecting');
-    state = 'collecting';
-
-    await delay(5000)
-    console.log('not collecting');
-    state = 'waiting';
-  }
-}
-*/
 
 function setup() {
   createCanvas(1000, 700);
@@ -86,7 +66,7 @@ function setup() {
   let options = {
     inputs: 50,
     outputs: 8,
-    // goede postuur, achterover geleund, water pakken, te dicht bij scherm, rechtstaan, gsm, slaap voor, slaap achter
+    // goede postuur, slechte postuur achterover geleund, water pakken, te dicht bij scherm, rechtstaan, gsm, slaap voor, slaap achter
     task: 'classification',
     debug: true
   }
@@ -106,8 +86,6 @@ function finished() {
   $status.textContent = 'model trained'
   neuralNetwork.save();
 }
-
-
 
 function gotPoses(poses) {
   // console.log(poses); 
