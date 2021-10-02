@@ -85,7 +85,6 @@ function gotResult(error, results) {
 
    if (results[0].confidence > 0.75 ) {
     let result  = results[0].label
-    document.querySelector(`.label`).textContent = result
     document.querySelector(`.confidence`).textContent = Math.round(results[0].confidence*100)
     handleResults(result)
   }
@@ -199,7 +198,7 @@ const checkTimers = () => {
     $standTime.style.color = 'red'
     }
 
-       if (standTimer > 2){
+       if (standTimer > 120){
           $standTime.innerHTML = `<a href="http://127.0.0.1:5500/detecting/detect.html">You sit too long, time to play a game</a>`
     }
 }
