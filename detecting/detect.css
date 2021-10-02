@@ -1,18 +1,21 @@
 html, body {
   margin: 0;
-  padding: 0;
+  padding: 0
 }
 canvas {
   display: block;
-  transform: scale(.7) translate(50%, -60rem);
+  transform: scale(.7) translate(50%, -50rem);
   height: 100vh;
 }
 
+
+
 .container{
   font-family: Helvetica, sans-serif;
-  background: rgb(238,174,202);
-background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }
+
+
 
 .button{
   border: .1rem solid black;
@@ -39,6 +42,8 @@ background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 
 .title{
   font-size: 4rem;
   text-transform: uppercase;
+  margin: 0;
+  margin-top: 2rem;
 }
 
 .subtitle{
@@ -46,10 +51,43 @@ background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 
 }
 
 .results{
-  display: flex;
-  width: 44rem;
   border: .1rem solid black;
   margin-top: 1rem;
   padding: 1rem;
+}
+
+.sub-results{
+  display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  border-top: .1rem solid black;
+}
+
+.sub-results p{
+ 
+  padding-right: 1rem;
+  width: fit-content;
+  text-align: center;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.p{
+ border-right: .1rem  solid black;
+  margin-right: 1rem;
+}
+
+.drink, .stand{
+  transition: .5s all ease;
+}
+
+
+.sub-results span{
+  font-weight: 500;
+}
+
+.status-container{
+  font-size: 2rem;
+  font-weight: bold;
+
 }

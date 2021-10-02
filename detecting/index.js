@@ -1,21 +1,40 @@
+//based on
 // ml5.js: Pose Classification
 // The Coding Train / Daniel Shiffman
 // https://thecodingtrain.com/learning/ml5/7.2-pose-classification.html
 // https://youtu.be/FYgYyq-xqAw
 
-// All code: https://editor.p5js.org/codingtrain/sketches/JoZl-QRPK
-
-// Separated into three sketches
-// 1: Data Collection: https://editor.p5js.org/codingtrain/sketches/kTM0Gm-1q
-// 2: Model Training: https://editor.p5js.org/codingtrain/sketches/-Ywq20rM9
-// 3: Model Deployment: https://editor.p5js.org/codingtrain/sketches/c5sDNr8eM
 
 let video;
 let poseNet;
 let pose;
 let skeleton;
+let neuralNetwork;
+let postureStatus = "loading"
+let drinkTimeStamp = "not yet drunk"
+let standTimeStamp = "not yet stood up"
 
-let brain;
+let goodTimer = [0, 1, 1, 1, 0]
+let goodTimerSart;
+
+let drinkTimer = 0
+let standTimer = 0
+
+let $status = document.querySelector(`.status`)
+let $subStatus = document.querySelector(`.sub-status`)
+let $drinkTime = document.querySelector(`.drink`)
+let $standTime = document.querySelector(`.stand`)
+
+const alarm1 = new Audio('../assets/alarm1.mp3');
+const alarm2 = new Audio('../assets/alarm2.mp3');
+
+const init = () => {
+  $status.textContent = postureStatus;
+  $drinkTime.textContent = drinkTimeStamp;
+  $standTime.textContent = standTimeStamp;
+
+  startTimers()
+}
 
 function setup() {
   createCanvas(1000, 700);
@@ -30,17 +49,18 @@ function setup() {
     task: 'classification',
     debug: true
   }
-  brain = ml5.neuralNetwork(options);
+  neuralNetwork = ml5.neuralNetwork(options);
   const modelInfo = {
     model: 'model/model.json',
     metadata: 'model/model_meta.json',
     weights: 'model/model.weights.bin',
   };
-  brain.load(modelInfo, brainLoaded);
+  neuralNetwork.load(modelInfo, brainLoaded);
 }
 
 function brainLoaded() {
-  console.log('pose classification ready!');
+  postureStatus = "ready"
+  $status.textContent = postureStatus;
   classifyPose();
 }
 
@@ -53,21 +73,74 @@ function classifyPose() {
       inputs.push(x);
       inputs.push(y);
     }
-    brain.classify(inputs, gotResult);
+    neuralNetwork.classify(inputs, gotResult);
   } else {
     setTimeout(classifyPose, 100);
   }
 }
 
 function gotResult(error, results) {
-  
-  if (results[0].confidence > 0.75) {
-    console.log(results[0])
-    document.querySelector(`.posture`).textContent = results[0].label
-    document.querySelector(`.confidence`).textContent = results[0].confidence
+
+  checkTimers();
+
+   if (results[0].confidence > 0.75 ) {
+    let result  = results[0].label
+    document.querySelector(`.label`).textContent = result
+    document.querySelector(`.confidence`).textContent = Math.round(results[0].confidence*100)
+    handleResults(result)
   }
-  //console.log(results[0].confidence);
+
   classifyPose();
+}
+
+const handleResults = (result) => {
+
+  console.log(pose.nose.y)
+   const today = new Date();
+
+
+
+  if (result.split(" ")[0] == "good"){
+      $status.textContent = "good"
+      start()
+      document.querySelector(`.container`).style.background = `radial-gradient(circle, rgba(174,180,238,1) 0%, rgba(173,233,148,1) 100%)`
+  } else {
+   
+      $status.textContent = "bad"
+      stop()
+      document.querySelector(`.container`).style.background = `radial-gradient(circle, rgba(238,215,174,1) 0%, rgba(255,104,104,1) 100%)`
+  }
+
+  if (result == "good get up"){
+    const time = today.getHours() + ":" + today.getMinutes();
+    standTimer = 0;
+    $standTime.textContent = time
+    $standTime.style.color = 'black'
+      $subStatus.textContent = " - it's good to get up"
+  }  else if (result == "bad mental breakdown" || result == "bad mental breakdown 2" || pose.nose.y > 400 ) {
+       alarm2.play()
+       $subStatus.textContent = "- mental breakdown alert"
+      $status.textContent = "Bad"
+  } else if (result == "good water"){
+    drinkTimer = 0;
+     $drinkTime.style.color = 'black'
+    const time = today.getHours() + ":" + today.getMinutes();
+     $subStatus.textContent = " - drinking water is good for your health"
+    $drinkTime.textContent = time
+  } else if (result == "good posture 1" || result == "good posture 2" || result == "good posture 3" || result == "good posture "){
+    $subStatus.textContent = " posture"
+  } else if (result == "bad posture to close") {
+     $subStatus.textContent = " - to close to your screen"
+  } else if (result == "bad posture sleep" || result == "bad posture sleep 2") {
+     $subStatus.textContent = " - don't be sleepy 💤"
+     alarm1.play()
+  } else if (result == "bad posture phone" ) {
+     $subStatus.textContent = " - stay off your phone 📵"
+  } else if (result == "bad posture back" ) {
+     $subStatus.textContent = " posture - you lean back too much"
+  } else if (result == "bad posture" || result == "bad posture 2"  ) {
+     $subStatus.textContent = " posture"
+  } 
 }
 
 
@@ -111,3 +184,86 @@ function draw() {
   fill(255, 0, 255);
   noStroke();
 }
+
+const startTimers = () => {
+  setInterval(function(){ drinkTimer++, standTimer++ }, 1000);
+}
+
+const checkTimers = () => {
+    if (drinkTimer > 30){
+      $drinkTime.style.color = 'red'
+  
+    }
+
+    if (standTimer > 60){
+    $standTime.style.color = 'red'
+    }
+
+       if (standTimer > 2){
+          $standTime.innerHTML = `<a href="http://127.0.0.1:5500/detecting/detect.html">You sit too long, time to play a game</a>`
+    }
+}
+ 
+
+const setMSec = () => {
+  if (goodTimer[0] < 10) {
+    document.querySelector(".good-msec").innerHTML = "0" + goodTimer[0];
+  } else {
+    document.querySelector(".good-msec").innerHTML = goodTimer[0];
+  }
+  goodTimer[0] = goodTimer[0] + 1;
+  goodTimerSart = setTimeout(setMSec, 100);
+  if (goodTimer[0] >= 10) {
+    setSec();
+    goodTimer[0] = 0;
+  }
+}
+
+const  setSec = () => {
+  if (goodTimer[1] >= 60) {
+    setMin();
+    goodTimer[1] = 0;
+  }
+  if (goodTimer[1] < 10) {
+    document.querySelector(".good-sec").innerHTML = "0" + goodTimer[1];
+  } else {
+    document.querySelector(".good-sec").innerHTML = goodTimer[1];
+  }
+  goodTimer[1] = goodTimer[1] + 1;
+}
+
+const setMin = () => {
+  if (goodTimer[2] >= 60) {
+    setHour();
+    goodTimer[2] = 0;
+  }
+  if (min < 10) {
+    document.querySelector(".good-min").innerHTML = "0" + goodTimer[2];
+  } else {
+    document.querySelector(".good-min").innerHTML = goodTimer[2];
+  }
+  min = min + 1;
+}
+
+const setHour = () => {
+  if (goodTimer[3] < 10) {
+    document.querySelector(".good-hour").innerHTML = "0" + goodTimer[2];
+  } else {
+    document.querySelector(".good-hour").innerHTML = goodTimer[2];
+  }
+  goodTimer[2] = goodTimer[2] + 1;
+}
+
+const start = () => {
+  if (!goodTimer[4]) {
+    goodTimer[4] = 1;
+    setMSec();
+  }
+}
+
+const stop = () => {
+  clearTimeout(goodTimerSart);
+  goodTimer[4] = 0;
+}
+
+init()

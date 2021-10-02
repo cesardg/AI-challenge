@@ -13,12 +13,26 @@
 <body>
   <div class="container detect-container">
     <h1 class="title">Posture buddy</h1>
-    <p class="subtitle">Posture buddy reminds you to maintain good posture while working, because One A.I. a day, keeps the docter away. <br> We are not responsible for incorrect medical advice.</p>
+    <p class="subtitle">Posture buddy reminds you to maintain good posture while working, because one A.I. a day, keeps the docter away. <br> We are not responsible for incorrect medical advice.</p>
     <div class="results">
-      <p>Status: <span class="result"></span></p>
-      <p>posture: <span class="posture"></span></p>
-      <p>confidence: <span class="confidence"></span></p>
+      <p class="status-container">Status: <span class="status"></span><span class="sub-status"></span< /p>
+          <div class="sub-results">
+            <p class="p">Time since last drink<br><span class="drink"></span></p>
+            <p class="p">Time since you last stood up<br><span class="stand"></span></p>
+            <p class="p">Total good posture time<br>
+              <span class="good-hour">00</span>:
+              <span class="good-min">00</span>:
+              <span class="good-sec">00</span>:
+              <span class="good-msec">00</span>
+            </p>
+           
+            <p class="last-p">confidence<br><span class="confidence"></span>%</p>
+          </div>
+
+
+    
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/addons/p5.sound.min.js"></script>
