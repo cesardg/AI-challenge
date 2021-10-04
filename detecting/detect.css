@@ -4,7 +4,7 @@ html, body {
 }
 canvas {
   display: block;
-  transform: scale(.7) translate(50%, -50rem);
+  transform: scale(.7) translate(50%, -55rem);
   height: 100vh;
 }
 

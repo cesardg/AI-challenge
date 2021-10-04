@@ -1,10 +1,3 @@
-//based on
-// ml5.js: Pose Classification
-// The Coding Train / Daniel Shiffman
-// https://thecodingtrain.com/learning/ml5/7.2-pose-classification.html
-// https://youtu.be/FYgYyq-xqAw
-
-
 let video;
 let poseNet;
 let pose;
@@ -199,7 +192,7 @@ const checkTimers = () => {
     }
 
        if (standTimer > 120){
-          $standTime.innerHTML = `<a href="playing/play.html">You sit too long, time to play a game</a>`
+          $standTime.innerHTML = `<a href="../playing/play.html">You sit too long, time to play a game</a>`
     }
 }
  
