@@ -67,3 +67,7 @@ canvas {
   transform: translate(17rem, -30rem);
   z-index: 2;
 }
+
+.link{
+  color: black;
+}

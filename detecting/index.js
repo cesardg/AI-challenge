@@ -24,14 +24,17 @@ let $status = document.querySelector(`.status`)
 let $subStatus = document.querySelector(`.sub-status`)
 let $drinkTime = document.querySelector(`.drink`)
 let $standTime = document.querySelector(`.stand`)
+       
 
 const alarm1 = new Audio('../assets/alarm1.mp3');
 const alarm2 = new Audio('../assets/alarm2.mp3');
+const $submitButton = document.querySelector(`.canv-form`);
 
 const init = () => {
   $status.textContent = postureStatus;
   $drinkTime.textContent = drinkTimeStamp;
   $standTime.textContent = standTimeStamp;
+  $submitButton.addEventListener(`submit`, handleSubmitForm);
 
   startTimers()
 }
@@ -94,10 +97,7 @@ function gotResult(error, results) {
 
 const handleResults = (result) => {
 
-  console.log(pose.nose.y)
    const today = new Date();
-
-
 
   if (result.split(" ")[0] == "good"){
       $status.textContent = "good"
@@ -263,6 +263,12 @@ const start = () => {
 const stop = () => {
   clearTimeout(goodTimerSart);
   goodTimer[4] = 0;
+}
+
+const handleSubmitForm = (e) => {
+  e.preventDefault();
+  const $form = e.currentTarget;
+  resizeCanvas($form.querySelector(`.canv-width`).value, $form.querySelector(`.canv-height`).value, false)
 }
 
 init()

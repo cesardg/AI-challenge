@@ -91,3 +91,19 @@ canvas {
   font-weight: bold;
 
 }
+
+.form{
+  position: fixed; 
+  bottom: 0; 
+  right: 0;
+  border: .1rem solid black;
+  padding: 1rem;
+  margin: 1rem;
+  line-height: 0.5;
+  font-size: .8rem;
+
+}
+
+.form input {
+  width: 4rem;
+}
