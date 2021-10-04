@@ -91,7 +91,6 @@ function gotResult(error, results) {
 const handleResults = (result) => {
 
    const today = new Date();
-   console.log(pose)
 
   if (result.split(" ")[0] == "good"){
       $status.textContent = "good"
@@ -114,7 +113,7 @@ const handleResults = (result) => {
        alarm2.play()
        $subStatus.textContent = "- mental breakdown alert"
       $status.textContent = "Bad"
-  } else if (result == "good water" && pose.rightWrist.y >= pose.nose.y ){
+  } else if (result == "good water"){
     drinkTimer = 0;
      $drinkTime.style.color = 'black'
     const time = today.getHours() + ":" + today.getMinutes();
@@ -127,7 +126,7 @@ const handleResults = (result) => {
   } else if (result == "bad posture sleep" || result == "bad posture sleep 2") {
      $subStatus.textContent = " - don't be sleepy 💤"
      alarm1.play()
-  } else if (result == "bad posture phone" && pose.rightWrist.y <= pose.rightElbow.y ) {
+  } else if (result == "bad posture phone" ) {
      $subStatus.textContent = " - stay off your phone 📵"
   } else if (result == "bad posture back" ) {
      $subStatus.textContent = " posture - you lean back too much"
